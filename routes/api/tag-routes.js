@@ -8,9 +8,12 @@ router.get('/', async (req, res) => {
   // be sure to include its associated Product data
   try {
     const tagData = await Tag.findAll({
-      include: [{
-        model: Product
-      }]
+      include: [
+        { model: Product }
+      ],
+      order: [
+        ['id', 'ASC']
+      ]
     });
     res.status(200).json(tagData);
   } catch (err) {
@@ -71,6 +74,15 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete on tag by its `id` value
+  Tag.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((err) => res.json(err));
 });
 
 module.exports = router;
